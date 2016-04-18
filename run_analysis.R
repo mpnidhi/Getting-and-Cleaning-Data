@@ -1,38 +1,32 @@
 library(plyr) 
 
 
-# Step 1 
+# Step 1
+# download all the data files in teh working directory and save in the working directory
 # Merge the training and test sets to create one data set 
 ############################################################################### 
 
 
-Xrain <- read.table("train/X_train.txt") 
-Yrain <- read.table("train/y_train.txt") 
-Subrain <- read.table("train/subject_train.txt") 
+ 
+# above read all the test data tables in the R variables
+# read all the train data tables in the R variables
+# create 'x' data set by using rbind 
+Xdata <- rbind(read.table("UCI HAR Dataset/train/X_train.txt"), read.table("UCI HAR Dataset/test/X_test.txt")) 
 
 
-Xtest <- read.table("test/X_test.txt") 
-Ytest <- read.table("test/y_test.txt") 
-Subtest <- read.table("test/subject_test.txt") 
+# create 'y' data set by using rbind
+Ydata <- rbind(read.table("UCI HAR Dataset/train/y_train.txt"), read.table("UCI HAR Dataset/test/y_test.txt")) 
 
 
-# create 'x' data set 
-Xdata <- rbind(read.table("train/X_train.txt"), x_testread.table("test/X_test.txt")) 
-
-
-# create 'y' data set 
-Ydata <- rbind(read.table("train/y_train.txt"), read.table("test/y_test.txt")) 
-
-
-# create 'subject' data set 
-Subdata <- rbind(read.table("train/subject_train.txt"), read.table("test/subject_test.txt")) 
+# create 'subject' data set by using rbind
+Subdata <- rbind(read.table("UCI HAR Dataset/train/subject_train.txt"), read.table("UCI HAR Dataset/test/subject_test.txt")) 
 
 
 # Step 2 
 # Extract only the measurements on the mean and standard deviation for each measurement 
 ############################################################################### 
 
-features <- read.table("features.txt") 
+features <- read.table("UCI HAR Dataset/features.txt") 
 
 
 # get only columns with mean() or std() in their names 
@@ -52,7 +46,7 @@ names(Xdata) <- features[mean_or_std_in_features, 2]
 ############################################################################### 
 
 
-activities <- read.table("activity_labels.txt") 
+activities <- read.table("UCI HAR Dataset/activity_labels.txt") 
 
 
 # update values with correct activity names 
@@ -86,5 +80,5 @@ all_data <- cbind(Xdata, Ydata, Subdata)
 averages_data <- ddply(all_data, .(subject, activity), function(x) colMeans(x[, 1:66])) 
 
 
-#write.table(averages_data, "averages_data.txt", row.name=FALSE )
+
 write.csv(averages_data, "averages_data.csv", row.names = FALSE )
